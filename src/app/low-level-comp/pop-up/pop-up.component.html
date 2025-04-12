@@ -1,0 +1,17 @@
+<section id="overlay" class="">
+  <div class="contentWrapper px-10 py-5">
+    <div class="flex justify-between">
+      <div>
+        <h1 class="pb-4">{{ popUpContent.title }}</h1>
+        <p class="text-sm font-medium">
+          {{ popUpContent.desc }}
+        </p>
+      </div>
+      <a (click)="close()">
+        <i class="fa-solid fa-xmark"></i>
+      </a>
+    </div>
+    <!-- here we gonna send the preperd map to display -->
+    <ng-content />
+  </div>
+</section>

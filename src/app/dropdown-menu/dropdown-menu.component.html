@@ -1,0 +1,46 @@
+<div class="dropdown">
+  <input
+    type="checkbox"
+    #checkedInp
+    class="hidden select"
+    [id]="'select-' + dropdown().id"
+  />
+  <label
+    (click)="this.control.markAsTouched()"
+    [for]="'select-' + dropdown().id"
+    class="labelSelection tracking-wide flex p-3"
+  >
+    <div class="selected">
+      @if(control.value){
+      <p class="text-sm font-light text-gray-500">{{selected.type }}</p>
+      }@else{
+      <!-- case user not selected an option yet -->
+      <p class="text-sm font-light text-gray-500">please pick an option</p>
+      }
+    </div>
+    <div class="caret"></div>
+  </label>
+  <ul class="menu">
+    <li
+      class="my-1"
+      *ngFor="let option of dropdown().options"
+      [class.active]="isSelected(option.title)"
+      (click)="selectOption(option)"
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex justify-start items-center">
+          <div
+            [style.backgroundColor]="false ? 'black' : option.id"
+            class="w-5 h-5 rounded-full me-2"
+          ></div>
+          <p class="text-sm p-1 capitalize">{{ option.type }}</p>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+<!-- @if(control.getError('required') && control.touched && !checkedInp.checked){
+<p class="text-red-700 font-light text-sm">
+  {{ dropdown().title }} field is required .
+</p>
+} -->

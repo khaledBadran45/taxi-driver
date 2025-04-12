@@ -1,0 +1,15 @@
+<div class="container">
+  <h2 class="text-2xl text-center">Your Previous Journies:</h2>
+  <ul>
+    @if(prevTrips.length){
+    <li class="capitalize" *ngFor="let trip of prevTrips; let i = index">
+      {{ i + 1 }}- journy from {{ trip.starting_place }} to
+      {{ trip.ending_place }} with distance {{ trip.distance | kilo }} waiting
+      time {{ trip.waiting_time }}m cost {{ trip.cost }} taxi type
+      {{ trip.taxi }}
+    </li>
+    }@else{
+    <li>ooh , you don't have journies !</li>
+    }
+  </ul>
+</div>

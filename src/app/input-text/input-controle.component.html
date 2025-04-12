@@ -1,0 +1,13 @@
+<div class="text-start">
+  <label class="text-sm" [for]="inp.type">{{ inp.label }}</label>
+  <input
+    pInputText
+    [formControl]="inp.control"
+    [readonly]="inp.isReadOnly"
+    [type]="inp.type"
+    [placeholder]="inp.placeholder"
+  />
+  @if(inp.control.getError('required')&&inp.control.touched){
+  <p>This field is required</p>
+  }
+</div>

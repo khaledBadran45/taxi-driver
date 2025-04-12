@@ -1,0 +1,17 @@
+.container {
+  direction: rtl;
+  li {
+    padding: 1em;
+    transition: all 0.3s;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: capitalize;
+    &:hover {
+      color: #28a745;
+    }
+  }
+}
+.active {
+  color: #28a745;
+}

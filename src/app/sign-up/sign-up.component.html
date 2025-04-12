@@ -1,0 +1,27 @@
+<div class="container">
+  <h1 class="font-bold text-2xl heading capitalize">welcom , please sign up </h1>
+  <form [formGroup]="signUpForm" (ngSubmit)="submit()">
+    <div class="grid grid-cols-1 gap-5">
+      <app-input-control
+        [inp]="{
+          label: 'username',
+          control: getControl('username'),
+          type: 'text',
+          placeholder: 'Jhon Deo'
+        }"
+      />
+      <app-input-control
+        [inp]="{
+          label: 'password',
+          control: getControl('password'),
+          type: 'password',
+          placeholder: ''
+        }"
+      />
+    </div>
+    <div class="text-start">
+      <h1>{{ this.errorname }}</h1>
+    </div>
+    <button type="submit">Sign up</button>
+  </form>
+</div>

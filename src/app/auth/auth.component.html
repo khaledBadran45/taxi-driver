@@ -1,0 +1,36 @@
+<div class="login h-screen">
+  <div class="px-10 grid grid-cols-3 h-full">
+    <div class="lg:col-span-1 col-span-3 self-start">
+      <div class="md:px-10 mx-auto h-full">
+        <div class="main pagetitle">
+          <h1>login</h1>
+        </div>
+        <!-- login -->
+        <app-login
+          [@fadeAnimation]
+          (_forgetPassword)="this.showForgetPassword()"
+          *ngIf="currentComponent == 'login'"
+          (@fadeAnimation.done)="onAnimationDone($event)"
+        />
+        <!-- forget_password -->
+        <div class="mt-20">
+          <!-- <app-forget-password
+            [@fadeAnimation]
+            (confirmation)="showConfirmation()"
+            *ngIf="currentComponent == 'forget'"
+            (@fadeAnimation.done)="onAnimationDone($event)"
+          /> -->
+        </div>
+        <!-- confirmation -->
+        <div class="mt-20">
+          <!-- <app-confirmation
+            [@fadeAnimation]
+            *ngIf="currentComponent == 'confirmation'"
+            (@fadeAnimation.done)="onAnimationDone($event)"
+          /> -->
+        </div>
+      </div>
+    </div>
+    <div class="col-span-2 hidden lg:block bg"></div>
+  </div>
+</div>

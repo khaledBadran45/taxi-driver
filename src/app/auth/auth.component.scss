@@ -1,0 +1,29 @@
+@import "./../../../../style/colors.scss";
+.loginarea__wraper {
+  margin: 0 auto;
+  border-radius: 5px;
+  box-shadow: 0 0 50px 10px rgba(95, 45, 237, 0.1);
+  background-color: aliceblue;
+}
+.loginarea__wraper_Width {
+  width: 90%;
+  margin: 0 auto;
+}
+button {
+  width: 100%;
+  padding: 0.5em;
+  margin-block: 1em;
+  border-radius: 8px;
+  color: #fff;
+  background-color: $primaryColor;
+  transition: $transition;
+}
+.bg {
+  background: url("https://images.unsplash.com/photo-1563986768817-257bf91c5753?q=80&w=2110&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+.disabled{
+  background-color: #cdcdcd;
+}

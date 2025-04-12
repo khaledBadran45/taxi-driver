@@ -1,0 +1,86 @@
+<div class="container">
+  <h1 class="heading font-bold text-2xl capitalize">Calculate Journy Cost</h1>
+  <form (ngSubmit)="createTrip()" [formGroup]="tripf">
+    <div class="grid grid-cols-1 gap-5">
+      <div class="entryPoint">
+        note:these points is auto complete so please choose from the menu
+        <label class="text-sm font-light" for="pickup">Entry point </label>
+        <p-auto-complete
+          field="display_name"
+          [suggestions]="items | async"
+          (completeMethod)="search($event)"
+          (onSelect)="selectEntryPoint($event)"
+        />
+      </div>
+      <div class="exitPoint">
+        <label class="text-sm font-light" for="destination">Exit point</label>
+        <p-auto-complete
+          field="display_name"
+          [suggestions]="items | async"
+          (completeMethod)="search($event)"
+          (onSelect)="selectExistPoint($event)"
+        />
+      </div>
+      <app-input-control
+        [inp]="{
+          label: 'Distance (in kylo)',
+          control: tripf.get('distance'),
+          type: 'string',
+          isReadOnly: true,
+          placeholder: 'Please add entry and exist points to know distance '
+        }"
+      />
+    </div>
+    <div class="taxi">
+      <label class="text-sm font-light pb-2" for="taxi-type">Taxi type</label>
+      <app-dropdown-menu
+        [control]="getControl('taxi_id')"
+        [dropdown]="{
+          title: 'Taxi id',
+          id: 1,
+          options: this.taxisList$ | async
+        }"
+      />
+    </div>
+    <app-input-control
+      [inp]="{
+        label: 'Waiting time ( in minute )',
+        control: getControl('waiting_time'),
+        type: 'string',
+        isReadOnly: false,
+        placeholder: ''
+      }"
+    />
+    <div class="cost">
+      <app-input-control
+        [inp]="{
+          label: 'Journy cost (in Pound)',
+          control: costControl,
+          type: 'string',
+          isReadOnly: true,
+          placeholder:
+            'Please add entry and exist points , distance ,waiting time to know the cost '
+        }"
+      />
+    </div>
+    @if(this.entryPointLocation.lat&&this.exitPointLocation.lat>0){
+    <label class="text-sm font-light pb-2" for="taxi-type"
+      >Map simulation</label
+    >
+    <app-map #map />
+    }
+    <!-- <button type="button" (click)="displayMap()">simulate trip</button> -->
+    <button type="submit">create trip</button>
+  </form>
+</div>
+<!-- @if(mapVisibility){
+<app-pop-up
+  (closePopUp)="onClosePopUp()"
+  [popUpContent]="{
+    title: 'trip simulation',
+    desc: 'Display the distance between the entry pont and the exist point'
+  }"
+>
+  <app-map #map />
+</app-pop-up> -->
+<!-- } -->

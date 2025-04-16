@@ -16,15 +16,19 @@ export class PrevTripsComponent implements OnInit {
   _Router = inject(Router);
   prevTrips: any[] = [];
   ngOnInit(): void {
-    this._HttpClient
-      .get(`${environment.baseUrl}/journey/`, {
-        headers: {
-          Authorization: `Token ${sessionStorage.getItem('token')}`,
-          'ngrok-skip-browser-warning': '69420',
-        },
-      })
-      .subscribe((x: any) => {
-        this.prevTrips = x;
-      });
+    if (sessionStorage.getItem('token')) {
+      this._HttpClient
+        .get(`${environment.baseUrl}/journey/`, {
+          headers: {
+            Authorization: `Token ${sessionStorage.getItem('token')}`,
+            'ngrok-skip-browser-warning': '69420',
+          },
+        })
+        .subscribe((x: any) => {
+          this.prevTrips = x;
+        });
+    } else {
+      this._Router.navigate([`/login`]);
+    }
   }
 }

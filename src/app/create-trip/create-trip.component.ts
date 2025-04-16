@@ -52,13 +52,19 @@ import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component'
 })
 export class CreateTripComponent {
   cost$!: Observable<any>;
+  distanceInMeters: any;
+  journyDetails!: {};
 
   ngOnInit(): void {
-    // this.taxisList$ = this.http.get(`${environment.baseUrl}/taxis/`, {
-    //   headers: {
-    //     'ngrok-skip-browser-warning': '69420',
-    //   },
-    // });
+    if (sessionStorage.getItem('token')) {
+      this.taxisList$ = this.http.get(`${environment.baseUrl}/taxis/`, {
+        headers: {
+          'ngrok-skip-browser-warning': '69420',
+        },
+      });
+    } else {
+      this._Router.navigate(['/login']);
+    }
   }
   items!: Observable<any>;
   http = inject(HttpClient);
@@ -81,9 +87,6 @@ export class CreateTripComponent {
   getControl(name: string) {
     return this.tripf.get(name) as FormControl<number>;
   }
-  onClosePopUp() {
-    this.mapVisibility = false;
-  }
   selectEntryPoint(point: AutoCompleteSelectEvent) {
     this.entryPointLocation.lat = point.value.lat;
     this.entryPointLocation.lon = point.value.lon;
@@ -105,12 +108,13 @@ export class CreateTripComponent {
         .getDistanceAndTime(this.entryPointLocation, this.exitPointLocation)
         .subscribe({
           next: (val) => {
+            this.distanceInMeters = val.paths[0].distance;
             const kilos = this.toKilo(val.paths[0].distance);
             this.tripf.get('distance')?.setValue(kilos);
-            this.calcCost();
           },
           error: (error) => {
             if (error.status == 400) {
+              alert(`Error bad request`);
             }
           },
         });
@@ -121,26 +125,43 @@ export class CreateTripComponent {
     }
   }
   calcCost() {
-    this.http
-      .post(
-        `${environment.baseUrl}/calculate/`,
-        {
-          taxi_id: this.tripf.get('taxi_id')?.value,
-          waiting_time: this.tripf.get('waiting_time')?.value,
-          distance: this.tripf.get('distance')?.value,
-        },
-        {
+    if (this.tripf.valid) {
+      const taxiId = this.tripf.get('taxi_id')?.value;
+      const waitingTime = this.tripf.get('waiting_time')?.value;
+      const distance = this.tripf.get('distance')?.value;
+      if (taxiId && waitingTime && distance) {
+        this.journyDetails = {
+          taxi_id: parseInt(taxiId),
+          waiting_time: parseInt(waitingTime),
+          distance: this.distanceInMeters,
+        };
+      }
+      let journyCost = '';
+      this.http
+        .post(`${environment.baseUrl}/calculate/`, this.journyDetails, {
           headers: {
             Authorization: `Token ${sessionStorage.getItem('token')}`,
           },
-        }
-      )
-      .subscribe((x: any) => this.costControl.setValue(`${x} P`));
+        })
+        .subscribe((x: any) => {
+          journyCost = `${x.cost} P`;
+          const isSureAndContinue = confirm(
+            `the cost of your journy is ${journyCost} are you sure you want to continue?`
+          );
+          if (isSureAndContinue) {
+            this.createTrip();
+          }
+        });
+    } else {
+      alert(`data invalid`);
+    }
   }
   toKilo(distanceMeteres: number): string {
     return (distanceMeteres / 1000).toFixed() + ' Km';
+    15;
   }
   createTrip() {
+    this.tripf.get('distance')?.setValue(this.distanceInMeters);
     if (sessionStorage.getItem('token')) {
       this.http
         .post(`${environment.baseUrl}/journey/`, this.tripf.value, {

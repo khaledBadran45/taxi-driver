@@ -16,9 +16,9 @@ import { LoginService } from '../login.service';
 export class NavComponent implements OnInit {
   // isLogin: boolean = this.login.getValue();
   _loginService = inject(LoginService);
-  
+
   _Router = inject(Router);
-  token = true
+  token = sessionStorage.getItem('token');
   isLogin: boolean = false;
   ngOnInit(): void {
     this._loginService.loginS
@@ -54,6 +54,7 @@ export class NavComponent implements OnInit {
       .subscribe((res) => {
         console.log(res);
         this._loginService.setLogin(false);
+        this._Router.navigate(['/login']);
       });
   }
 }

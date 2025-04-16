@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { LoginService } from '../login.service';
 @Component({
   selector: 'app-sign-up',
   standalone: true,
@@ -22,6 +23,7 @@ export class SignUpComponent {
   errorname: string = '';
   http = inject(HttpClient);
   _Router = inject(Router);
+  _login = inject(LoginService);
   signUpForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -34,8 +36,9 @@ export class SignUpComponent {
           next: (v: any) => {
             console.log(v);
             sessionStorage.setItem('token', v.token);
-
+            this._login.setLogin(true);
             this._Router.navigate(['/createTrip']);
+            this;
           },
           error: (err) => {
             this.errorname = err.error.username[0];

@@ -1,6 +1,6 @@
 <div class="container">
   <h1 class="heading font-bold text-2xl capitalize">Calculate Journy Cost</h1>
-  <form (ngSubmit)="createTrip()" [formGroup]="tripf">
+  <form (ngSubmit)="calcCost()" [formGroup]="tripf">
     <div class="grid grid-cols-1 gap-5">
       <div class="entryPoint">
         note:these points is auto complete so please choose from the menu
@@ -24,7 +24,7 @@
       <app-input-control
         [inp]="{
           label: 'Distance (in kylo)',
-          control: tripf.get('distance'),
+          control: tripf.get('distance'), 
           type: 'string',
           isReadOnly: true,
           placeholder: 'Please add entry and exist points to know distance '
@@ -51,7 +51,7 @@
         placeholder: ''
       }"
     />
-    <div class="cost">
+    <!-- <div class="cost">
       <app-input-control
         [inp]="{
           label: 'Journy cost (in Pound)',
@@ -62,7 +62,7 @@
             'Please add entry and exist points , distance ,waiting time to know the cost '
         }"
       />
-    </div>
+    </div> -->
     @if(this.entryPointLocation.lat&&this.exitPointLocation.lat>0){
     <label class="text-sm font-light pb-2" for="taxi-type"
       >Map simulation</label

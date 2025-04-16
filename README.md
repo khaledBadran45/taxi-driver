@@ -1,12 +1,19 @@
-انشاء رحله
-1.detect the two places user want to go with the auto complete collaporate with the places api of any api https://github.com/smeijer/leaflet-geosearch fo instance .
+api {} json ,
 
-2.calculating the distance
-and then auto calculate the distance between two locations .
+backend => ahmed => api
+front => communcate wiht database => crud
+clint side => front , back => server side .
+http protocol .
+get , post , put , delete 
 
-3.display the distance .
-
-4.get the total cost for a single user .
+    
+component (types) low , high ,
+routing
+service -decorator
+auth  
+opst Data .
+map
+get rendrent prev jourins
 
 # DistanceCostCalculator
 

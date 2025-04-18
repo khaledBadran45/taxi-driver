@@ -38,9 +38,9 @@ export class SignUpComponent {
             sessionStorage.setItem('token', v.token);
             this._login.setLogin(true);
             this._Router.navigate(['/createTrip']);
-            this;
           },
           error: (err) => {
+            console.log(err)
             this.errorname = err.error.username[0];
           },
         });

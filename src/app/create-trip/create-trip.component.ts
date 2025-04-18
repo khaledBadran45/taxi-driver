@@ -32,6 +32,7 @@ import { environment } from '../../environments/environment.development';
 import { InputControleComponent } from '../input-text/input-controle.component';
 import { Router } from '@angular/router';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
+import { LoginService } from '../login.service';
 // import { InputControleComponent } from '../input-text/input-controle.component';
 @Component({
   selector: 'app-create-trip',
@@ -57,6 +58,7 @@ export class CreateTripComponent {
 
   ngOnInit(): void {
     if (sessionStorage.getItem('token')) {
+      this._login.setLogin(true)
       this.taxisList$ = this.http.get(`${environment.baseUrl}/taxis/`, {
         headers: {
           'ngrok-skip-browser-warning': '69420',
@@ -68,6 +70,8 @@ export class CreateTripComponent {
   }
   items!: Observable<any>;
   http = inject(HttpClient);
+  
+  _login = inject(LoginService)
   _Router = inject(Router);
   mapVisibility = false;
   // distanceTime!: Observable<any>;

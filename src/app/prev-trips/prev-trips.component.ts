@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment.development';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { KyloPipe } from '../pipes/kylo.pipe';
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-prev-trips',
@@ -14,9 +15,11 @@ import { KyloPipe } from '../pipes/kylo.pipe';
 export class PrevTripsComponent implements OnInit {
   _HttpClient = inject(HttpClient);
   _Router = inject(Router);
+  _login = inject(LoginService);
   prevTrips: any[] = [];
   ngOnInit(): void {
     if (sessionStorage.getItem('token')) {
+      this._login.setLogin(true);
       this._HttpClient
         .get(`${environment.baseUrl}/journey/`, {
           headers: {

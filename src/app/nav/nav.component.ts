@@ -21,6 +21,7 @@ export class NavComponent implements OnInit {
   token = sessionStorage.getItem('token');
   isLogin: boolean = false;
   ngOnInit(): void {
+    this.token = sessionStorage.getItem('token');
     this._loginService.loginS
       .pipe(
         map((data) => {

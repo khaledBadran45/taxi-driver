@@ -43,7 +43,6 @@ import { LoginService } from '../login.service';
     FormsModule,
     MapComponent,
     CommonModule,
-    InputControleComponent,
     ReactiveFormsModule,
     DropdownMenuComponent,
     PopUPComponent,

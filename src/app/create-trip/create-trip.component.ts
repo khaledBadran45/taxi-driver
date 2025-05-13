@@ -32,6 +32,9 @@ import { environment } from '../../environments/environment.development';
 import { Router } from '@angular/router';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { LoginService } from '../login.service';
+import { AlertComponent } from '../alert/alert.component';
+
+export type AlertType = 'success' | 'danger' | 'warning' | 'info';
 // import { InputControleComponent } from '../input-text/input-controle.component';
 @Component({
   selector: 'app-create-trip',
@@ -45,11 +48,29 @@ import { LoginService } from '../login.service';
     ReactiveFormsModule,
     DropdownMenuComponent,
     PopUPComponent,
+    AlertComponent,
   ],
   templateUrl: './create-trip.component.html',
   styleUrl: './create-trip.component.scss',
 })
-export class CreateTripComponent {
+export class CreateTripComponent implements AfterViewInit {
+  @ViewChild(AlertComponent) alert!: AlertComponent;
+  @ViewChild(MapComponent) MapComponent!: MapComponent;
+  showJourneyCostAlert(message: string, type: AlertType, time: number) {
+    this.alert.showAlert(
+      message,
+      type,
+      true,
+      time // 0 means don't auto-close
+    );
+  }
+  ngAfterViewInit() {
+    this.showJourneyCostAlert(
+      `the cost of your journy is ${100}`,
+      'info',
+      6000
+    );
+  }
   nearpyTaxis: {
     taxi_id: number;
     taxi_type: string;
@@ -98,26 +119,33 @@ export class CreateTripComponent {
     // this method is expect a string and it's not working
   });
   costControl = new FormControl('');
-  getControl(name: string) {
-    return this.tripf.get(name) as FormControl<number>;
-  }
   selectEntryPoint(point: AutoCompleteSelectEvent) {
     this.entryPointLocation.lat = point.value.lat;
     this.entryPointLocation.lon = point.value.lon;
-    // this.tripf.get('starting_place')?.setValue(point.value.name);
+    this.tripf.get('starting_place')?.setValue(point.value.name);
+    // console.log(point.value.name);
     // this.calculateDistanceDuration();
   }
   selectExistPoint(point: AutoCompleteSelectEvent) {
     this.exitPointLocation.lat = point.value.lat;
     this.exitPointLocation.lon = point.value.lon;
-    // this.tripf.get('ending_place')?.setValue(point.value.name);
-    // this.calculateDistanceDuration();
+    this.tripf.get('ending_place')?.setValue(point.value.name);
+    this.calculateDistanceDuration([
+      this.entryPointLocation,
+      this.exitPointLocation,
+    ]);
+    this.MapComponent.addRouts({
+      entryPointLocation: this.entryPointLocation,
+      exitPointLocation: this.exitPointLocation,
+    });
+  }
+  getControl(name: string) {
+    return this.tripf.get(name) as FormControl<number>;
   }
   search(event: AutoCompleteCompleteEvent) {
     this.items = this._tripService.searchCountry(event.query);
   }
   calculateDistanceDuration(locations: any) {
-    // if (this.entryPointLocation && this.exitPointLocation) {
     this._tripService.getDistanceAndTime(locations[0], locations[1]).subscribe({
       next: (val) => {
         this.distanceInMeters = val.paths[0].distance;
@@ -134,17 +162,17 @@ export class CreateTripComponent {
       this.entryPointLocation,
       this.exitPointLocation
     );
-    // }
   }
-  calcCost() {
+  calcCost(duration: number) {
+    console.log(this.tripf.get('taxi_id')?.value);
     if (this.tripf.valid) {
       const taxiId = this.tripf.get('taxi_id')?.value;
-      const waitingTime = this.tripf.get('waiting_time')?.value;
+      // const waitingTime = this.tripf.get('waiting_time')?.value;
       const distance = this.tripf.get('distance')?.value;
-      if (taxiId && waitingTime && distance) {
+      if (taxiId && distance) {
         this.journyDetails = {
           taxi_id: parseInt(taxiId),
-          waiting_time: waitingTime,
+          waiting_time: duration,
           distance: this.distanceInMeters,
         };
       }
@@ -157,12 +185,9 @@ export class CreateTripComponent {
         })
         .subscribe((x: any) => {
           journyCost = `${x.cost} P`;
-          const isSureAndContinue = confirm(
-            `the cost of your journy is ${journyCost} are you sure you want to continue?`
-          );
-          if (isSureAndContinue) {
-            // this.createTrip();
-          }
+          this.alert.message = `the cost of your journy is ${journyCost}`;
+          this.alert.show = true;
+          this.createTrip(duration);
         });
     } else {
       alert(`data invalid`);
@@ -184,7 +209,10 @@ export class CreateTripComponent {
         })
         .subscribe({
           next: (val) => {
-            alert(`you have successfully create a journy`);
+            setTimeout(() => {
+              this.alert.message = `you have successfully create a journy`;
+              this.alert.type = 'success';
+            }, 2000);
           },
           error: (error) => {
             if (error.status == 401) {
@@ -236,8 +264,8 @@ export class CreateTripComponent {
       console.log(this.tripf.value);
       this.mapVisibility = true;
       const userLocation = {
-        latitude: this.entryPointLocation.lat,
-        longitude: this.entryPointLocation.lon,
+        latitude: Number(this.entryPointLocation.lat),
+        longitude: Number(this.entryPointLocation.lon),
         type: this.tripf.get('taxi_id')?.value,
       };
       this.http
@@ -246,7 +274,7 @@ export class CreateTripComponent {
             Authorization: `Token ${sessionStorage.getItem('token')}`,
           },
         })
-        .subscribe({
+        .subscribe({  
           next: (val: any) => {
             this.mapVisibility = true;
             this.nearpyTaxis = val;
@@ -262,32 +290,5 @@ export class CreateTripComponent {
       alert('please enter a valid data');
     }
   }
+  getTaxiCost() {}
 }
-/**
- * 1) display the nearpy taxis
- * 2)
- * [
-  {
-    "taxi_id": 1,
-    "taxi_type": "vip",
-    "taxi_location": "دمياط الجديدة",
-    "distance_km": 4075.62,
-    "duration_min": 3358.66
-  },
-  {
-    "taxi_id": 3,
-    "taxi_type": "vip",
-    "taxi_location": "راس البر",
-    "distance_km": 4075.62,
-    "duration_min": 3316.46
-  },
-  {
-    "taxi_id": 2,
-    "taxi_type": "vip",
-    "taxi_location": "كفر سعد البلد",
-    "distance_km": 4089.99,
-    "duration_min": 3370.88
-  }
-]
-
-*/

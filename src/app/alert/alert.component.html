@@ -1,0 +1,12 @@
+<div *ngIf="show" class="alert" [ngClass]="'alert-' + type">
+  <div class="alert-content flex justify-between items-center">
+    <span class="alert-message">{{ message }}</span>
+    <button
+      *ngIf="dismissible"
+      class="text-xl close-button"
+      (click)="dismiss()"
+    >
+      &times;
+    </button>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+.dropdown {
+  display: inline-block;
+  width: 100%;
+  font-family: "Arial", sans-serif;
+  position: relative;
+}
+.dropdown .labelSelection {
+  padding: 1em;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #cbd5e1;
+  color: #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.dropdown .labelSelection:hover {
+  border-color: #28a745;
+}
+.dropdown .labelSelection .caret {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid rgb(126, 126, 126);
+}
+.dropdown .select:checked + .labelSelection .caret {
+  transform: rotate(180deg);
+}
+.dropdown .menu {
+  padding: 5px;
+  width: 100%;
+  list-style: none;
+  background-color: #fff;
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.2);
+  border-radius: 0.5em;
+  color: #000;
+  max-height: 40vh;
+  overflow-y: auto;
+  font-weight: light;
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0px;
+  min-width: 200px;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
+}
+.dropdown .menu li {
+  padding: 0.2em;
+  padding-block: 0.2em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.dropdown .menu li:hover {
+  background-color: #e9e8e8;
+}
+.dropdown .menu li p {
+  font-weight: 400;
+}
+.dropdown .menu .active {
+  background-color: #fafafa;
+}
+.dropdown .menu .active p {
+  font-weight: 600;
+  letter-spacing: 0.9px;
+}
+.dropdown .select:checked ~ .menu {
+  display: block;
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.usedOption {
+  cursor: not-allowed !important;
+}/*# sourceMappingURL=dropdown-menu.component.css.map */

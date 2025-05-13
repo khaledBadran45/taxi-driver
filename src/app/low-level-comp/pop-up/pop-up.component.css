@@ -1,0 +1,26 @@
+#overlay {
+  background: rgba(0, 0, 0, 0.5019607843);
+  position: fixed;
+  width: 100%;
+  min-height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 999999;
+  transition: opacity 0.3s ease; /* Smooth transition */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#overlay .contentWrapper {
+  width: 700px;
+  height: 50vh;
+  overflow-y: auto;
+  height: auto;
+  color: #fff;
+  border-radius: 8px;
+  max-height: 90vh;
+}
+
+a {
+  cursor: pointer;
+}/*# sourceMappingURL=pop-up.component.css.map */

@@ -1,0 +1,24 @@
+.line {
+  border-bottom: 1px solid #28a745;
+  width: 100%;
+  position: absolute;
+}
+
+.container {
+  direction: rtl;
+}
+.container li {
+  padding: 1em;
+  transition: all 0.3s;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.container li:hover {
+  color: #28a745;
+}
+
+.active {
+  color: #28a745;
+}/*# sourceMappingURL=nav.component.css.map */

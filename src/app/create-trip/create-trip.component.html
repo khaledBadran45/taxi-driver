@@ -1,5 +1,6 @@
 <div class="container mx-auto px-4 py-8 max-w-md">
   <!-- Form Card -->
+
   <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
     <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
       <svg
@@ -20,28 +21,34 @@
     </h1>
 
     <form (ngSubmit)="exploreNearpyTaxis()" [formGroup]="tripf">
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1"
+        >
+          Start point
+        </label>
+        <p-auto-complete
+          field="display_name"
+          [suggestions]="items | async"
+          (completeMethod)="search($event)"
+          (onSelect)="selectEntryPoint($event)"
+        />
+      </div>
+      <div class="exitPoint">
+        <label
+          class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1"
+        >
+          Exit point
+        </label>
+        <p-auto-complete
+          field="display_name"
+          [suggestions]="items | async"
+          (completeMethod)="search($event)"
+          (onSelect)="selectExistPoint($event)"
+        />
+      </div>
       <!-- Map Section -->
       <div class="mb-5">
-        <!-- <div class="entryPoint">
-          note:these points is auto complete so please choose from the menu
-          <label class="text-sm font-light" for="pickup">Entry point </label>
-          <p-auto-complete
-            field="display_name"
-            [suggestions]="items | async"
-            (completeMethod)="search($event)"
-            (onSelect)="selectEntryPoint($event)"
-          />
-        </div> -->
-        <!-- <div class="exitPoint">
-          <label class="text-sm font-light" for="destination">Exit point</label>
-          <p-auto-complete
-            field="display_name"
-            [suggestions]="items | async"
-            (completeMethod)="search($event)"
-            (onSelect)="selectExistPoint($event)"
-          />
-        </div> -->
-
         <label
           class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1"
         >
@@ -232,6 +239,7 @@
 
   <!-- Taxi Popup (Unchanged from your original) -->
   @if(mapVisibility){
+
   <app-pop-up
     (closePopUp)="onClosePopUp()"
     [popUpContent]="{
@@ -239,6 +247,7 @@
       desc: 'Choose your preferred taxi'
     }"
   >
+    <app-alert></app-alert>
     <div class="taxi-list">
       @if(nearpyTaxis.length){
       <div *ngFor="let nT of nearpyTaxis; let i = index" class="taxi-card">
@@ -260,7 +269,7 @@
             <span class="value highlight">{{ nT.taxi_location }}</span>
           </div>
         </div>
-        <button class="select-button" (click)="createTrip(nT.duration_min)">
+        <button class="select-button" (click)="this.calcCost(nT.duration_min)">
           Select
         </button>
       </div>
@@ -276,3 +285,6 @@
   </app-pop-up>
   }
 </div>
+
+<!--
+1) search  -->

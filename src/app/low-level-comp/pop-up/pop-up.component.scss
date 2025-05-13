@@ -5,22 +5,19 @@
   min-height: 100vh;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 999999;
   transition: opacity 0.3s ease; /* Smooth transition */
   display: flex;
   justify-content: center;
   align-items: center;
   .contentWrapper {
-    direction: rtl;
-    width: 560px;
+    width: 700px;
+    height: 50vh;
+    overflow-y: auto;
     height: auto;
-    background-color: #28a745;
     color: #fff;
     border-radius: 8px;
-    padding: 0.5em;
-    
-    // overflow-y: scroll;
-    // max-height:90vh;
+    max-height: 90vh;
   }
 }
 a {

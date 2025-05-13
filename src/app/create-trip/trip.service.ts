@@ -6,7 +6,8 @@ import { pointLocation, tripPoints } from './location.model';
 @Injectable({
   providedIn: 'root',
 })
-export class TripService { // dependency injection 
+export class TripService {
+  // dependency injection
   constructor(private http: HttpClient) {}
   private tripPointsSubject = new BehaviorSubject<tripPoints | null>(null);
   tripPoints$: Observable<tripPoints | null> =
@@ -25,7 +26,7 @@ export class TripService { // dependency injection
     console.log(countryName);
     return this.http.get(
       `https://nominatim.openstreetmap.org/search?q=${countryName}&format=json`
-    )
+    );
   }
   distanceAndDurationofCountries(
     entryPoint: pointLocation,

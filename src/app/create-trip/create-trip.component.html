@@ -1,86 +1,278 @@
-<div class="container">
-  <h1 class="heading font-bold text-2xl capitalize">Calculate Journy Cost</h1>
-  <form (ngSubmit)="calcCost()" [formGroup]="tripf">
-    <div class="grid grid-cols-1 gap-5">
-      <div class="entryPoint">
-        note:these points is auto complete so please choose from the menu
-        <label class="text-sm font-light" for="pickup">Entry point </label>
-        <p-auto-complete
-          field="display_name"
-          [suggestions]="items | async"
-          (completeMethod)="search($event)"
-          (onSelect)="selectEntryPoint($event)"
+<div class="container mx-auto px-4 py-8 max-w-md">
+  <!-- Form Card -->
+  <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 text-blue-500"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+        />
+      </svg>
+      Calculate Your Trip
+    </h1>
+
+    <form (ngSubmit)="exploreNearpyTaxis()" [formGroup]="tripf">
+      <!-- Map Section -->
+      <div class="mb-5">
+        <div class="entryPoint">
+          note:these points is auto complete so please choose from the menu
+          <label class="text-sm font-light" for="pickup">Entry point </label>
+          <p-auto-complete
+            field="display_name"
+            [suggestions]="items | async"
+            (completeMethod)="search($event)"
+            (onSelect)="selectEntryPoint($event)"
+          />
+        </div>
+        <div class="exitPoint">
+          <label class="text-sm font-light" for="destination">Exit point</label>
+          <p-auto-complete
+            field="display_name"
+            [suggestions]="items | async"
+            (completeMethod)="search($event)"
+            (onSelect)="selectExistPoint($event)"
+          />
+        </div>
+        
+        <label
+          class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          Locations
+        </label>
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <app-map
+            #map
+            (detectLocations)="onDetectLocations($event)"
+            class="h-48 w-full"
+          />
+        </div>
+      </div>
+
+      <!-- Distance (Auto-calculated) -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Distance</label
+        >
+        <div
+          class="bg-gray-50 px-4 py-2 rounded text-gray-600 flex items-center gap-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+            />
+          </svg>
+          {{
+            tripf.get("distance")?.value
+              ? tripf.get("distance")?.value + " km"
+              : "Set locations first"
+          }}
+        </div>
+      </div>
+
+      <!-- Passengers Input with Enhanced Validation -->
+      <div class="mb-4">
+        <label
+          class="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+          Passengers
+        </label>
+        <input
+          type="number"
+          formControlName="num_customers"
+          class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          [ngClass]="{
+            'border-gray-300': !tripf.get('num_customers')?.errors,
+            'border-red-500':
+              tripf.get('num_customers')?.errors &&
+              tripf.get('num_customers')?.touched
+          }"
+          min="1"
+          max="4"
+          placeholder="1-4 passengers"
+          (blur)="tripf.get('num_customers')?.markAsTouched()"
+        />
+
+        <!-- Validation Messages -->
+        @if(tripf.get('num_customers')?.errors &&
+        tripf.get('num_customers')?.touched) {
+        <div class="mt-1 text-sm text-red-600 flex items-start gap-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mt-0.5 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>
+            @if(tripf.get('num_customers')?.errors?.['required']) { Passenger
+            count is required } @if(tripf.get('num_customers')?.errors?.['min'])
+            { Minimum 1 passenger }
+            @if(tripf.get('num_customers')?.errors?.['max']) { Maximum 4
+            passengers }
+          </span>
+        </div>
+        }
+      </div>
+
+      <!-- Taxi Type Dropdown -->
+      <div class="mb-6">
+        <label
+          class="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
+            />
+          </svg>
+          Taxi Type
+        </label>
+        <app-dropdown-menu
+          [control]="getControl('taxi_id')"
+          [dropdown]="{
+            title: 'Select vehicle type',
+            options: this.taxisList$ | async
+          }"
         />
       </div>
-      <div class="exitPoint">
-        <label class="text-sm font-light" for="destination">Exit point</label>
-        <p-auto-complete
-          field="display_name"
-          [suggestions]="items | async"
-          (completeMethod)="search($event)"
-          (onSelect)="selectExistPoint($event)"
-        />
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-md transition-colors flex items-center justify-center gap-2"
+        [disabled]="!tripf.valid"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        Find Available Taxis
+      </button>
+    </form>
+  </div>
+
+  <!-- Taxi Popup (Unchanged from your original) -->
+  @if(mapVisibility){
+  <app-pop-up
+    (closePopUp)="onClosePopUp()"
+    [popUpContent]="{
+      title: 'Available Taxis Nearby',
+      desc: 'Choose your preferred taxi'
+    }"
+  >
+    <div class="taxi-list">
+      @if(nearpyTaxis.length){
+      <div *ngFor="let nT of nearpyTaxis; let i = index" class="taxi-card">
+        <div class="taxi-type">
+          <span class="">{{ i + 1 }}</span>
+          <h3>{{ nT.taxi_type }}</h3>
+        </div>
+        <div class="taxi-details">
+          <div class="detail-row">
+            <span class="label">Waithing Time:</span>
+            <span class="value highlight">{{ nT.duration_min }} min</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Distance:</span>
+            <span class="value highlight">{{ nT.distance_km }} km</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Location:</span>
+            <span class="value highlight">{{ nT.taxi_location }}</span>
+          </div>
+        </div>
+        <button class="select-button" (click)="createTrip(nT.duration_min)">
+          Select
+        </button>
       </div>
-      <app-input-control
-        [inp]="{
-          label: 'Distance (in kylo)',
-          control: tripf.get('distance'), 
-          type: 'string',
-          isReadOnly: true,
-          placeholder: 'Please add entry and exist points to know distance '
-        }"
-      />
+      }@else{
+      <div class="dot-spinner m-auto">
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+        <div class="dot-spinner__dot"></div>
+      </div>
+      }
     </div>
-    <div class="taxi">
-      <label class="text-sm font-light pb-2" for="taxi-type">Taxi type</label>
-      <app-dropdown-menu
-        [control]="getControl('taxi_id')"
-        [dropdown]="{
-          title: 'Taxi id',
-          id: 1,
-          options: this.taxisList$ | async
-        }"
-      />
-    </div>
-    <app-input-control
-      [inp]="{
-        label: 'Waiting time ( in minute )',
-        control: getControl('waiting_time'),
-        type: 'string',
-        isReadOnly: false,
-        placeholder: ''
-      }"
-    />
-    <!-- <div class="cost">
-      <app-input-control
-        [inp]="{
-          label: 'Journy cost (in Pound)',
-          control: costControl,
-          type: 'string',
-          isReadOnly: true,
-          placeholder:
-            'Please add entry and exist points , distance ,waiting time to know the cost '
-        }"
-      />
-    </div> -->
-    @if(this.entryPointLocation.lat&&this.exitPointLocation.lat>0){
-    <label class="text-sm font-light pb-2" for="taxi-type"
-      >Map simulation</label
-    >
-    <app-map #map />
-    }
-    <!-- <button type="button" (click)="displayMap()">simulate trip</button> -->
-    <button type="submit">create trip</button>
-  </form>
+  </app-pop-up>
+  }
 </div>
-<!-- @if(mapVisibility){
-<app-pop-up
-  (closePopUp)="onClosePopUp()"
-  [popUpContent]="{
-    title: 'trip simulation',
-    desc: 'Display the distance between the entry pont and the exist point'
-  }"
->
-  <app-map #map />
-</app-pop-up> -->
-<!-- } -->

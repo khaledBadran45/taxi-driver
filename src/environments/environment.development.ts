@@ -1,3 +1,3 @@
 export const environment = {
-  baseUrl: 'http://127.0.0.1:8000/api',
+  baseUrl: 'https://2e76-197-63-125-181.ngrok-free.app/api',
 };

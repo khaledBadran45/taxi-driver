@@ -1,15 +1,79 @@
-<div class="container">
-  <h2 class="text-2xl text-center">Your Previous Journies:</h2>
-  <ul>
-    @if(prevTrips.length){
-    <li class="capitalize" *ngFor="let trip of prevTrips; let i = index">
-      {{ i + 1 }}- journy from {{ trip.starting_place }} to
-      {{ trip.ending_place }} with distance {{ trip.distance | kilo }} waiting
-      time {{ trip.waiting_time }}m cost {{ trip.cost }} taxi type
-      {{ trip.taxi }}
-    </li>
-    }@else{
-    <li>sorry , you don't have journies !</li>
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <h2 class="text-3xl font-bold text-center text-green-700 mb-8">
+    Your Travel History
+  </h2>
+
+  @if(prevTrips.length) {
+  <div class="space-y-6">
+    @for(trip of prevTrips; track trip.id;) {
+    <div
+      class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+    >
+      <div class="p-6">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center">
+            <h3 class="text-xl font-semibold text-gray-800">
+              {{ trip.starting_place | titlecase }} →
+              {{ trip.ending_place | titlecase }}
+            </h3>
+          </div>
+          <span
+            class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full"
+          >
+            {{ trip.taxi | titlecase }}
+          </span>
+        </div>
+
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-gray-50 p-3 rounded-lg">
+            <p class="text-sm text-gray-500">Distance</p>
+            <p class="font-medium">{{ trip.distance | kilo }} km</p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded-lg">
+            <p class="text-sm text-gray-500">Total Cost</p>
+            <p class="font-medium text-green-600">
+              ${{ trip.cost * trip.num_customers | number : "1.2-2" }}
+            </p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded-lg">
+            <p class="text-sm text-gray-500">Passengers</p>
+            <p class="font-medium">{{ trip.num_customers }}</p>
+          </div>
+        </div>
+
+        <div
+          class="mt-4 flex justify-between items-center text-sm text-gray-500"
+        >
+          <div>
+            <span class="mr-4">
+              <i class="fas fa-clock mr-1"></i>
+              Waiting: {{ trip.waiting_time }}
+            </span>
+            <span>
+              <i class="fas fa-calendar-alt mr-1"></i>
+              {{ trip.date | date : "mediumDate" }}
+            </span>
+          </div>
+          <button class="text-green-600 hover:text-green-800 font-medium">
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
     }
-  </ul>
+  </div>
+  } @else {
+  <div class="text-center py-12 bg-gray-50 rounded-xl">
+    <i class="fas fa-map-marked-alt text-5xl text-gray-300 mb-4"></i>
+    <h3 class="text-xl font-medium text-gray-600 mb-2">No journeys yet</h3>
+    <p class="text-gray-500 mb-4">
+      Your travel history will appear here once you start riding
+    </p>
+    <button
+      class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-300"
+    >
+      Plan a New Journey
+    </button>
+  </div>
+  }
 </div>

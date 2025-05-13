@@ -3,6 +3,7 @@ import { LoginComponent } from './Login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { CreateTripComponent } from './create-trip/create-trip.component';
 import { PrevTripsComponent } from './prev-trips/prev-trips.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -10,5 +11,6 @@ export const routes: Routes = [
   { path: 'signUp', component: SignUpComponent },
   { path: 'createTrip', component: CreateTripComponent },
   { path: 'prevTrips', component: PrevTripsComponent },
+  { path: '**', component: NotFoundComponent },
   // { path: 'prevTrips', component: PrevTripsComponent },
 ];

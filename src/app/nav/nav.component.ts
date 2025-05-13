@@ -18,10 +18,8 @@ export class NavComponent implements OnInit {
   _loginService = inject(LoginService);
 
   _Router = inject(Router);
-  token = sessionStorage.getItem('token');
   isLogin: boolean = false;
   ngOnInit(): void {
-    this.token = sessionStorage.getItem('token');
     this._loginService.loginS
       .pipe(
         map((data) => {
@@ -30,14 +28,6 @@ export class NavComponent implements OnInit {
         })
       )
       .subscribe();
-    /**
-       * if (this.token) {`
-      this._loginService.setLogin(true);
-      this._Router.navigate(['/createTrip'])
-    } else {
-      this._loginService.setLogin(false);
-    }
-       */
   }
   http = inject(HttpClient);
   logOut() {
@@ -47,15 +37,15 @@ export class NavComponent implements OnInit {
         {},
         {
           headers: {
-            Authorization: `Token ${this.token}`,
+            Authorization: `Token ${sessionStorage.getItem('token')}`,
           },
         }
       )
-      .pipe(map((data) => {}))
       .subscribe((res) => {
         console.log(res);
         this._loginService.setLogin(false);
         this._Router.navigate(['/login']);
+        sessionStorage.removeItem('token');
       });
   }
 }

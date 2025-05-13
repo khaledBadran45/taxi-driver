@@ -28,8 +28,10 @@ export class MapComponent implements AfterViewInit {
     this.centerMap(); // Now, we can safely use this.map,
     this._tripService.tripPoints$.subscribe({
       next: (x: any) => {
-        this.addRouts(x);
-        console.log(x);
+        if (x) {
+          this.addRouts(x);
+          console.log(x);
+        }
       },
       error: () => {},
     });

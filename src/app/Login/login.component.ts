@@ -48,6 +48,7 @@ export class LoginComponent {
         .post(`${environment.baseUrl}/login/`, this.loginF.value)
         .subscribe({
           next: (v: any) => {
+            console.log(v.token);
             sessionStorage.setItem('token', v.token);
             this._Router.navigate(['/createTrip']);
             this._loginService.setLogin(true);

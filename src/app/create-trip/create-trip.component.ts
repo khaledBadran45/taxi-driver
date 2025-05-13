@@ -29,7 +29,6 @@ import { PopUPComponent } from '../low-level-comp/pop-up/pop-up.component';
 import { MapComponent } from '../low-level-comp/map/map.component';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
-import { InputControleComponent } from '../input-text/input-controle.component';
 import { Router } from '@angular/router';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { LoginService } from '../login.service';
